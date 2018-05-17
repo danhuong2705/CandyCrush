@@ -450,11 +450,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!224 &934528509 stripped
-RectTransform:
-  m_PrefabParentObject: {fileID: 224533099865929882, guid: 447676018961bc34ea4cd61ee9cc46a2,
-    type: 2}
-  m_PrefabInternal: {fileID: 1956771907}
 --- !u!1 &947492580
 GameObject:
   m_ObjectHideFlags: 0
@@ -537,8 +532,6 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 1155394842}
-  - component: {fileID: 1155394841}
-  - component: {fileID: 1155394843}
   m_Layer: 0
   m_Name: AchiementManager
   m_TagString: Untagged
@@ -546,29 +539,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 0
---- !u!114 &1155394841
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1155394840}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 29a61059b34af3e44907b30cc524dd5d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  achivementPrefab: {fileID: 1724713476770894, guid: 3d70923b92524494a86224ea8df714ad,
-    type: 2}
-  achivementContent: {fileID: 934528509}
-  sprites:
-  - {fileID: 21300036, guid: d8f1154d7095d0741a1d8cad949828f3, type: 3}
-  - {fileID: 21300050, guid: d8f1154d7095d0741a1d8cad949828f3, type: 3}
-  - {fileID: 21300052, guid: d8f1154d7095d0741a1d8cad949828f3, type: 3}
-  visualAchievement: {fileID: 1232821703632056, guid: 985c20ecc865bc54f8da177905589220,
-    type: 2}
-  parent: {fileID: 1175073887}
-  lockedSprite: {fileID: 21300046, guid: d8f1154d7095d0741a1d8cad949828f3, type: 3}
-  unlockedSprite: {fileID: 21300048, guid: d8f1154d7095d0741a1d8cad949828f3, type: 3}
 --- !u!4 &1155394842
 Transform:
   m_ObjectHideFlags: 0
@@ -582,27 +552,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1155394843
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1155394840}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f94b975aab5f8c0438b6baf18330d067, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  xSize: 0
-  ySize: 0
-  multiColor: {fileID: 0}
-  candyWidth: 1
-  candies: []
-  scoreText: {fileID: 0}
-  scoreGameOver: {fileID: 0}
-  timeText: {fileID: 0}
-  GameOverPanel: {fileID: 0}
-  score: 0
 --- !u!1001 &1175073886
 Prefab:
   m_ObjectHideFlags: 0
@@ -718,11 +667,6 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: c1a2be5ec22becb4e9eb7cf765f09445, type: 2}
   m_IsPrefabParent: 0
---- !u!224 &1175073887 stripped
-RectTransform:
-  m_PrefabParentObject: {fileID: 224069384251371130, guid: c1a2be5ec22becb4e9eb7cf765f09445,
-    type: 2}
-  m_PrefabInternal: {fileID: 1175073886}
 --- !u!1 &1280844079
 GameObject:
   m_ObjectHideFlags: 0
