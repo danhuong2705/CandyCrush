@@ -10,6 +10,8 @@ public class FillGrid : MonoBehaviour {
     private float delayBetweenMatches = 0.1f;
     public static int minItemsForMatch = 3;
     [SerializeField]
+    private Transform CandySpace;
+    [SerializeField]
     private GameObject multiColor;
     [SerializeField]
     private float candyWidth=1f;
@@ -24,20 +26,29 @@ public class FillGrid : MonoBehaviour {
     private Text timeText;
     [SerializeField]
     private GameObject GameOverPanel;
-   
+    [SerializeField]
+    private Canvas mainCanvas;
     private AudioSource audio;
     private float time;
     public int score;
     public static FillGrid instance;
-    
+    private bool timeGame;
+    private bool normalGame;
+    int count;
 
     // Use this for initialization
     void Start() {
+
        
+            audio = GetComponent<AudioSource>();
+            score = 0;
+            UpdateScore();
+            
        
-        audio = GetComponent<AudioSource>();
-        score = 0;
-        UpdateScore();
+     
+    }
+     public void Init()
+    {
         canPlay = true;
         GetCandies();
         FillGrids();
@@ -45,31 +56,35 @@ public class FillGrid : MonoBehaviour {
         Item.OnMouseOverItemEventHandler += OnMouseOverItem;
         time = 20f;
     }
-    
     void Awake()
     {
         instance = this;
     }
     void Update()
     {
-        if(time > 0)
+      
+        if (mainCanvas.gameObject.activeInHierarchy)
         {
-            time -= Time.deltaTime;
-            timeText.text = (int)time + "";
-        }
-       
-        if(time <=0 )
-        {
-            for(int i = 0; i < xSize; i++)
+            if (time > 0)
             {
-                for(int j=0; j < ySize; j++)
-                {
-                    items[i, j].gameObject.SetActive(false);
-                }
+                time -= Time.deltaTime;
+                timeText.text = (int)time + "";
             }
-            GameOverPanel.SetActive(true);
-            scoreGameOver.text = score + "";
+            if (time <= 0)
+            {
+                for (int i = 0; i < xSize; i++)
+                {
+                    for (int j = 0; j < ySize; j++)
+                    {
+                        items[i, j].gameObject.SetActive(false);
+                       
+                    }
+                }
+                GameOverPanel.SetActive(true);
+                scoreGameOver.text = score + "";
+            }
         }
+      
     }
     void OnDisable()
     {
@@ -90,6 +105,77 @@ public class FillGrid : MonoBehaviour {
             }
         }
     }
+    void CountMatch()
+    {
+        count = 0;
+        for(int i = 0; i < xSize; i++)
+        {
+            for(int j = 0; j < ySize; j++)
+            {
+                MatchInfo matchInfo = GetMatchInformation(items[i,j]);
+                if (matchInfo.validMatch)
+                {
+                    count++;
+                }
+            }
+        }
+        Debug.Log(count);
+        
+    }
+    void ReFill()
+    {
+
+        //bool[,] check = null;
+        //Item[,] tmp = null;
+        //int x = 0;
+        //int y = 0;
+        //for (int i = 0; i < xSize; i++)
+        //{
+        //    for (int j = 0; j < ySize; j++)
+        //    {
+        //        items[i, j].gameObject.SetActive(false);
+        //    }
+        //}
+        //for (int i = 0; i < xSize; i++)
+        //{
+        //    for (int j = 0; j < ySize; j++)
+        //    {
+        //        check[i, j] = false;
+        //        tmp[i, j] = items[i, j];
+        //        items[i, j] = null;
+
+        //    }
+        //}
+        //check[-1, -1] = true;
+        int x = 0;
+        int y = 0;
+        for (int i = 0; i < xSize; i++)
+        {
+            for (int j = 0; j < ySize; j++)
+            {
+             
+                while ((x==i && y==j))
+                {
+                    x = Random.Range(0, xSize);
+                    y = Random.Range(0, ySize);
+                    Swap(items[i, j], items[x, y]);
+                 //   check[x, y] = true;
+                }
+
+            }
+        }
+       
+    }
+    public void DestroyAll()
+    {
+        for(int i = 0; i < xSize; i++)
+        {
+            for(int j = 0; j < ySize; j++)
+            {
+                Destroy(items[i, j].gameObject);
+            }
+        }
+    }
     void ClearGrid()
     {
         for(int i = 0; i < xSize; i++)
@@ -98,8 +184,7 @@ public class FillGrid : MonoBehaviour {
             {
                 MatchInfo matchInfo = GetMatchInformation(items[i,j]);
                 if (matchInfo.validMatch)
-                {
-                 
+                {               
                     Destroy(items[i, j].gameObject);
                     items[i, j] = InstantiateCandy(i, j);
                     j--;
@@ -111,14 +196,12 @@ public class FillGrid : MonoBehaviour {
     Item InstantiateCandy(int x,int y)
     {
         GameObject randdomCandy = candies[Random.Range(0, candies.Length)];
-        Item newCandy =((GameObject) Instantiate(randdomCandy, new Vector3( x *candyWidth, y), Quaternion.identity)).GetComponent<Item>();
+        Item newCandy =((GameObject) Instantiate(randdomCandy, new Vector3( x *candyWidth, y,0), Quaternion.identity,CandySpace)).GetComponent<Item>();
          newCandy.OnItemPostionChanged(x, y);
         return newCandy;
     }
     void OnMouseOverItem(Item item)
     {
-        Debug.Log(currentlySelectedItem);
-        Debug.Log(item);
         if(currentlySelectedItem == item || !canPlay)
         {
             return;
@@ -142,8 +225,9 @@ public class FillGrid : MonoBehaviour {
                
             }
             currentlySelectedItem = null;
+           
             canPlay = true;
-
+           
         }
         
        
@@ -181,8 +265,14 @@ public class FillGrid : MonoBehaviour {
          //   yield return new WaitForSeconds(delayBetweenMatches);
             yield return StartCoroutine(UpdateGridAfterMatch(matchB));
         }
+        yield return new WaitForSeconds(3f);
         currentlySelectedItem = null;
         canPlay = true;
+        CountMatch();
+        if (count == 0)
+        {
+            Debug.Log("out of match");
+        }
     }
 
     IEnumerator UpdateGridAfterMatch(MatchInfo match)
@@ -235,11 +325,13 @@ public class FillGrid : MonoBehaviour {
                     yield return StartCoroutine(DestroyItems(matchInfo.match));
                //     yield return new WaitForSeconds(delayBetweenMatches);
                     yield return StartCoroutine(UpdateGridAfterMatch(matchInfo));
+                    yield return new WaitForSeconds(delayBetweenMatches);
                 }
             }
         }
-        canPlay = true;
-
+       yield return new WaitForSeconds(3f);
+      //  ReFill();
+        canPlay = true; 
     }
     IEnumerator DestroyItems(List<Item> listItem)
     {

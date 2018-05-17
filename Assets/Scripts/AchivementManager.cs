@@ -16,11 +16,15 @@ public class AchivementManager : MonoBehaviour {
     private Transform parent;
     [SerializeField]
     private Sprite lockedSprite;
-    [SerializeField]
+     [SerializeField]
     private Sprite unlockedSprite;
     private int fadeTime = 2;
     Dictionary<string, AchievementItem> achivementList = new Dictionary<string, AchievementItem>();
     private static AchivementManager instance;
+    void Awake()
+    {
+        instance = this;
+    }
     public static AchivementManager Instance
     {
         get
@@ -39,7 +43,12 @@ public class AchivementManager : MonoBehaviour {
     void Start() {
 
         CreateAchievement("Press W", "Get 1000 point",10,false,0, lockedSprite,this.gameObject);
-
+       CreateAchievement("A", "A Score", 10, false, 0, lockedSprite, this.gameObject);
+       CreateAchievement("B", "B Score", 10, false, 0, lockedSprite, this.gameObject);
+        CreateAchievement("C", "D Score", 10, false, 0, lockedSprite, this.gameObject);
+        CreateAchievement("X", "X Score", 10, false, 0, lockedSprite, this.gameObject);
+       CreateAchievement("Y", "Y Score", 10, false, 0, lockedSprite, this.gameObject);
+       CreateAchievement("Z", "Z Score", 10, false, 0, lockedSprite, this.gameObject);
     }
     
     public void Update()
@@ -66,7 +75,7 @@ public class AchivementManager : MonoBehaviour {
         yield return new WaitForSeconds(3f);
         Destroy(achivement);
     }
-    void CreateAchievement(string name, string description, int point, bool isUnlocked, int time,Sprite sprite,GameObject gameObject)
+    public void CreateAchievement(string name, string description, int point, bool isUnlocked, int time,Sprite sprite,GameObject gameObject)
     {
         gameObject  = (GameObject)Instantiate(achivementPrefab, new Vector3(100,100,100), Quaternion.identity, achivementContent);
        
