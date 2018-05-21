@@ -30,32 +30,28 @@ public class FillGrid : MonoBehaviour {
     private Canvas mainCanvas;
     private AudioSource audio;
     private float time;
+    private bool isRunning;
     public int score;
     public static FillGrid instance;
-    private bool timeGame;
-    private bool normalGame;
     int count;
 
     // Use this for initialization
-    void Start() {
-
-       
+    void Start() {    
             audio = GetComponent<AudioSource>();
-            score = 0;
-            UpdateScore();
             
-       
-     
     }
      public void Init()
     {
+        score = 0;
+        UpdateScore();
         canPlay = true;
         GetCandies();
         FillGrids();
         ClearGrid();
-        Item.OnMouseOverItemEventHandler += OnMouseOverItem;
         time = 20f;
+        Item.OnMouseOverItemEventHandler += OnMouseOverItem;
     }
+   
     void Awake()
     {
         instance = this;
@@ -72,19 +68,29 @@ public class FillGrid : MonoBehaviour {
             }
             if (time <= 0)
             {
-                for (int i = 0; i < xSize; i++)
+                if (isRunning == false)
                 {
-                    for (int j = 0; j < ySize; j++)
-                    {
-                        items[i, j].gameObject.SetActive(false);
-                       
-                    }
+                    SetActive(false);
+                    GameOverPanel.SetActive(true);
+                    scoreGameOver.text = score + "";
                 }
-                GameOverPanel.SetActive(true);
-                scoreGameOver.text = score + "";
+              
+               
             }
         }
+        
       
+    }
+    public void SetActive(bool st)
+    {
+        for (int i = 0; i < xSize; i++)
+        {
+            for (int j = 0; j < ySize; j++)
+            {
+                items[i, j].gameObject.SetActive(st);
+
+            }
+        }
     }
     void OnDisable()
     {
@@ -94,6 +100,7 @@ public class FillGrid : MonoBehaviour {
     {     
         scoreText.text =  score+"";
     }
+
     void FillGrids()
     {
         items = new Item[xSize, ySize];
@@ -195,9 +202,14 @@ public class FillGrid : MonoBehaviour {
     }
     Item InstantiateCandy(int x,int y)
     {
+        Vector3 Postion;
         GameObject randdomCandy = candies[Random.Range(0, candies.Length)];
-        Item newCandy =((GameObject) Instantiate(randdomCandy, new Vector3( x *candyWidth, y,0), Quaternion.identity,CandySpace)).GetComponent<Item>();
-         newCandy.OnItemPostionChanged(x, y);
+        Item newCandy = ((GameObject)Instantiate(randdomCandy, new Vector3(x * candyWidth, y, 0), Quaternion.identity, CandySpace)).GetComponent<Item>();
+        Postion.x = x * candyWidth;
+        Postion.y = y;
+        Postion.z = 0;
+        newCandy.transform.position = Postion;
+        newCandy.OnItemPostionChanged(x, y);
         return newCandy;
     }
     void OnMouseOverItem(Item item)
@@ -225,27 +237,24 @@ public class FillGrid : MonoBehaviour {
                
             }
             currentlySelectedItem = null;
-           
-            canPlay = true;
-           
         }
         
        
     }
     IEnumerator TryMatch(Item a,Item b)
     {
+        isRunning = true;
         canPlay = false;
-       
+
         yield return new WaitForSeconds(delayBetweenMatches);
         yield return StartCoroutine(Swap(a, b));
         MatchInfo matchA = GetMatchInformation(a);
         MatchInfo matchB = GetMatchInformation(b);
 
-       
-        if((!matchA.validMatch) && (!matchB.validMatch))
+
+        if ((!matchA.validMatch) && (!matchB.validMatch))
         {
-            score += 10;
-            UpdateScore();
+
             yield return StartCoroutine(Swap(a, b));
             yield break;
         }
@@ -254,90 +263,87 @@ public class FillGrid : MonoBehaviour {
             matchType(matchA.match.Count);
             UpdateScore();
             yield return StartCoroutine(DestroyItems(matchA.match));
-           // yield return new WaitForSeconds(delayBetweenMatches);
+            yield return new WaitForSeconds(delayBetweenMatches);
             yield return StartCoroutine(UpdateGridAfterMatch(matchA));
+
         }
         else if (matchB.validMatch)
         {
             matchType(matchB.match.Count);
             UpdateScore();
+
             yield return StartCoroutine(DestroyItems(matchB.match));
-         //   yield return new WaitForSeconds(delayBetweenMatches);
+            yield return new WaitForSeconds(delayBetweenMatches);
             yield return StartCoroutine(UpdateGridAfterMatch(matchB));
+
         }
-        yield return new WaitForSeconds(3f);
+
         currentlySelectedItem = null;
         canPlay = true;
-        CountMatch();
-        if (count == 0)
-        {
-            Debug.Log("out of match");
-        }
+        isRunning = false;
     }
 
     IEnumerator UpdateGridAfterMatch(MatchInfo match)
     {
-        canPlay = false;
-        if(match.matchStartingY == match.matchEndingY)
+       
+        if (match.matchStartingY == match.matchEndingY)
         {
-            for(int i = match.matchStartingX; i <= match.matchEndingX; i++)
+            for (int i = match.matchStartingX; i <= match.matchEndingX; i++)
             {
-                for (int j = match.matchStartingY; j < ySize-1; j++)
+                for (int j = match.matchStartingY; j < ySize - 1; j++)
                 {
                     Item upperIdex = items[i, j + 1];
                     Item current = items[i, j];
                     items[i, j] = upperIdex;
                     items[i, j + 1] = current;
-                    items[i, j].OnItemPostionChanged(items[i, j].X,items[i,j].Y - 1);
+                    items[i, j].OnItemPostionChanged(items[i, j].X, items[i, j].Y - 1);
                 }
-               items[i,ySize-1] =  InstantiateCandy(i, ySize - 1);
+                items[i, ySize - 1] = InstantiateCandy(i, ySize - 1);
             }
         }
-        else if(match.matchEndingX == match.matchStartingX)
+        else if (match.matchEndingX == match.matchStartingX)
         {
             int matchHeight = 1 + (match.matchEndingY - match.matchStartingY);
-            for(int j = match.matchStartingY + matchHeight; j <= ySize - 1; j++)
+            for (int j = match.matchStartingY + matchHeight; j <= ySize - 1; j++)
             {
-                Item lowerIndex = items[match.matchStartingX, j-matchHeight];
+                Item lowerIndex = items[match.matchStartingX, j - matchHeight];
                 Item current = items[match.matchStartingX, j];
                 items[match.matchStartingX, j - matchHeight] = current;
                 items[match.matchStartingX, j] = lowerIndex;
             }
-            for(int j = 0;j < ySize - matchHeight; j++)
+            for (int j = 0; j < ySize - matchHeight; j++)
             {
                 items[match.matchStartingX, j].OnItemPostionChanged(match.matchStartingX, j);
             }
-            for(int i = 0; i < match.match.Count; i++)
+            for (int i = 0; i < match.match.Count; i++)
             {
                 items[match.matchStartingX, (ySize - 1) - i] = InstantiateCandy(match.matchStartingX, (ySize - 1) - i);
             }
         }
-        for(int x = 0; x < xSize; x++)
+        for (int x = 0; x < xSize; x++)
         {
-            for(int y = 0; y < ySize; y++)
+            for (int y = 0; y < ySize; y++)
             {
                 MatchInfo matchInfo = GetMatchInformation(items[x, y]);
                 if (matchInfo.validMatch)
                 {
                     matchType(matchInfo.match.Count);
                     UpdateScore();
-               //     yield return new WaitForSeconds(delayBetweenMatches);
-                    yield return StartCoroutine(DestroyItems(matchInfo.match));
-               //     yield return new WaitForSeconds(delayBetweenMatches);
-                    yield return StartCoroutine(UpdateGridAfterMatch(matchInfo));
                     yield return new WaitForSeconds(delayBetweenMatches);
+                    yield return StartCoroutine(DestroyItems(matchInfo.match));
+                    yield return new WaitForSeconds(delayBetweenMatches);
+                    yield return StartCoroutine(UpdateGridAfterMatch(matchInfo));
+
                 }
             }
         }
-       yield return new WaitForSeconds(3f);
-      //  ReFill();
-        canPlay = true; 
+
     }
     IEnumerator DestroyItems(List<Item> listItem)
     {
         foreach(Item i in listItem)
         {
-            yield return StartCoroutine(i.transform.Scale(Vector3.zero,0.1f));
+            yield return StartCoroutine(i.transform.Scale(Vector3.zero,0.05f));
             Destroy(i.gameObject);
         }
     }

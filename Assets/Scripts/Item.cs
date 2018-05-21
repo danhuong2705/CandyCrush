@@ -16,11 +16,16 @@ public class Item : MonoBehaviour {
     }
     [HideInInspector]
     public int id;
+    public int ID
+    {
+        get { return id; }
+
+    }
     public void OnItemPostionChanged(int newX,int newY)
     {
         X = newX;
         Y = newY;
-        gameObject.name = string.Format("Sprite[{0}][{1}]", X, Y);
+        gameObject.name = string.Format("Sprite[{0}][{1}] - {2}", X, Y,ID);
     }
     void OnMouseDown()
     {

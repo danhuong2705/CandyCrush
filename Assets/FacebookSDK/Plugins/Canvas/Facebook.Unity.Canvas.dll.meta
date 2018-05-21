@@ -1,10 +1,6 @@
 fileFormatVersion: 2
-guid: ad8334f281a7492f8f0e7e5de3c97f62
-labels:
-- gvh
-- gvh_targets-editor
-- gvh_version-1.2.69.0
-timeCreated: 1526016595
+guid: affdde83f703a40b0a5efc4755470578
+timeCreated: 1526507636
 licenseType: Pro
 PluginImporter:
   externalObjects: {}
@@ -17,12 +13,12 @@ PluginImporter:
   - first:
       Any: 
     second:
-      enabled: 0
+      enabled: 1
       settings: {}
   - first:
       Editor: Editor
     second:
-      enabled: 1
+      enabled: 0
       settings:
         DefaultValueInitialized: true
   - first:
