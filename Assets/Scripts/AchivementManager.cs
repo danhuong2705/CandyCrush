@@ -20,7 +20,7 @@ public class AchivementManager : MonoBehaviour {
     private Sprite unlockedSprite;
     private int fadeTime = 2;
     Dictionary<string, AchievementItem> achivementList = new Dictionary<string, AchievementItem>();
-    private static AchivementManager instance;
+    public static AchivementManager instance;
     void Awake()
     {
         instance = this;
@@ -53,10 +53,7 @@ public class AchivementManager : MonoBehaviour {
     
     public void Update()
     {
-        if(FillGrid.instance.score>=50)
-        {
-            EarnAchievement("Press W");
-        }
+       
     }
     public void EarnAchievement(string title)
     {
