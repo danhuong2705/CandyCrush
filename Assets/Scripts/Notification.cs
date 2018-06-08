@@ -32,7 +32,7 @@ public class Notification : MonoBehaviour {
 
                 activityContext.Call("runOnUiThread", new AndroidJavaRunnable(() =>
                 {
-                    toastExample.Call("sendNotification", "This is a Noti message", id, 17,15);
+                    toastExample.Call("sendNotification", "This is Candy Crush's Noti message", id, 00,46,15*1000);
                 }));
             }
 

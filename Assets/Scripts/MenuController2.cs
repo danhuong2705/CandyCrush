@@ -20,6 +20,9 @@ public class MenuController2 : MonoBehaviour {
     }
     public void OnBtnAchievement()
     {
+        AchivementManager.instance.InstanceAchievemnt();
+        AchivementManager.instance.Unlock();
+        
         MenuCanvas.gameObject.SetActive(false);
         AchievementCanvas.gameObject.SetActive(true);
 

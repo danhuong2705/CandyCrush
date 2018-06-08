@@ -73,6 +73,7 @@
      <Compile Include="Assets\Images\enums\GoTweenState.cs" />
      <Compile Include="Assets\Images\enums\GoUpdateType.cs" />
      <Compile Include="Assets\Scripts\AchievementItem.cs" />
+     <Compile Include="Assets\Scripts\AchievementManager2.cs" />
      <Compile Include="Assets\Scripts\AchivementManager.cs" />
      <Compile Include="Assets\Scripts\AlteredCandyInfo.cs" />
      <Compile Include="Assets\Scripts\Candy.cs" />
@@ -86,7 +87,6 @@
      <Compile Include="Assets\Scripts\HighScore.cs" />
      <Compile Include="Assets\Scripts\HighScoreController.cs" />
      <Compile Include="Assets\Scripts\MatchesInfo.cs" />
-     <Compile Include="Assets\Scripts\MenuController.cs" />
      <Compile Include="Assets\Scripts\MenuController1.cs" />
      <Compile Include="Assets\Scripts\MenuController2.cs" />
      <Compile Include="Assets\Scripts\Notification.cs" />

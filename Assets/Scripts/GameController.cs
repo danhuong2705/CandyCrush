@@ -95,11 +95,7 @@ public  class GameController : MonoBehaviour {
             time -= Time.deltaTime;
             ShơwTime();
         }
-        if (score >= 1000)
-        {
-            AchivementManager.instance.EarnAchievement("Press W");
-        }
-
+      
         if (state == GameState.None)
         {
             //user has clicked or touched
@@ -144,6 +140,11 @@ public  class GameController : MonoBehaviour {
                 }
             }
         }
+        if (score >= 1000)
+        {
+            AchievementManager2.current.EarnAchievement("Press W");
+        }
+
     }
 
     private void InitializeTypesOnPrefabCandy()
